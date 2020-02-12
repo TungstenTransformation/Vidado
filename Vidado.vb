@@ -3,22 +3,27 @@ Option Explicit
 'See https://github.com/KofaxRPA/Vidado for source code
 'In the Menu "Edit/References..." Add a reference to "Microsoft XML, 6.0"
 'This script calls Vidado Read engine, https://api.vidado.ai/portal/ for images less than 100,000 pixels.
-'Configure your Advanced Zone Locator as normal with registration, zones and anchors.
+'Configure your Advanced Zone Locators as normal with registration, zones and anchors.
 'Give each field you want to send to Vidado an OMR profile with the name "Vidado". The script will replace the OMR result with Vidado's OCR
 'You will need a VidadoAPIKey and add it to the Project's Script Variables "VidadoAPIKey"
 
 Private Declare Function GetTickCount Lib "kernel32" () As Long ' milliseconds
 
 Private Sub Document_AfterLocate(ByVal pXDoc As CASCADELib.CscXDocument, ByVal LocatorName As String)
-   If LocatorName="AZL" Then AZL_Vidado(pXDoc,LocatorName,Project.ScriptVariables.ItemByName("VidadoAPIKey").Value)
+   If pXDoc.ExtractionClass="" Then Err.Raise(456,,"The XDocument needs to be classified before trying to extract.")
+   If Locator_GetType(pXDoc,LocatorName)="AdvZone" Then AZL_Vidado(pXDoc,LocatorName,Project.ScriptVariables.ItemByName("VidadoAPIKey").Value)
 End Sub
+
+Private Function Locator_GetType(ByVal pXDoc As CASCADELib.CscXDocument, ByVal LocatorName As String)
+   Return Project.ClassByName(pXDoc.ExtractionClass).Locators.ItemByName(LocatorName).LocatorMethod.Name
+End Function
+
 
 Sub AZL_Vidado(ByVal pXDoc As CASCADELib.CscXDocument,ByVal LocatorName As String,VidadoAPIKey As String)
    'This runs at the End of the Advanced Zone Locator. If any zone uses a profile with the name "Vidado" the image will be sent to Vidado
    'This uses the Zones after AZL has registered them.
    Dim AZL As CscAdvZoneLocator, Zones As CscAdvZoneLocZones, Zone As CscAdvZoneLocZone, Z As Long, Alts As CscXDocFieldAlternatives, S As Long
    Dim Confidence As Double, Image As CscImage, Page As CscImage, SubField As CscAdvZoneLocSubfield, ImageFileName As String
-   If pXDoc.ExtractionClass="" Then Err.Raise(456,,"The XDocument needs to be classified before trying to extract.")
    Set AZL=Project.ClassByName(pXDoc.ExtractionClass).Locators.ItemByName(LocatorName).LocatorMethod
    Set Alts=pXDoc.Locators.ItemByName(LocatorName).Alternatives
    For Z=0 To AZL.Zones.Count-1
