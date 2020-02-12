@@ -13,6 +13,7 @@ Sub AZL_Vidado(ByVal pXDoc As CASCADELib.CscXDocument,ByVal LocatorName As Strin
    'This uses the Zones after AZL has registered them.
    Dim AZL As CscAdvZoneLocator, Zones As CscAdvZoneLocZones, Zone As CscAdvZoneLocZone, Z As Long, Alts As CscXDocFieldAlternatives, S As Long
    Dim Confidence As Double, Image As CscImage, Page As CscImage, SubField As CscAdvZoneLocSubfield, ImageFileName As String
+   If pXDoc.ExtractionClass="" Then Err.Raise(456,,"The XDocument needs to be classified before trying to extract.")
    Set AZL=Project.ClassByName(pXDoc.ExtractionClass).Locators.ItemByName(LocatorName).LocatorMethod
    Set Alts=pXDoc.Locators.ItemByName(LocatorName).Alternatives
    For Z=0 To AZL.Zones.Count-1
