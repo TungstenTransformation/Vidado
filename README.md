@@ -1,7 +1,7 @@
 # Integration of Vidado Read into Kofax Transformation
 <img src="https://vidado.ai/wp-content/themes/vidado/images/Vidado-logo-blue.png" alt="Vidado Logo" height="45">
 <img src="https://www.kofax.com/-/media/Images/Global/Header/logo_header.svg" alt="Kofax Logo" height="45">
-Vidado Read, (https://api.vidado.ai/portal/), is an extremely powerful OCR engine. Vidado confidently claims that it *always* reads better than a human 
+Vidado Read, (https://api.vidado.ai/portal/), is an extremely powerful OCR engine. Vidado confidently claims that it reads better than a human.
 This guide will show you how to integrate Vidado Read API into the Advanzed Zone Locator in Kofax Transformation.  
 
 ## compatible with all versions of
@@ -13,11 +13,11 @@ This guide will show you how to integrate Vidado Read API into the Advanzed Zone
 
 ## Vidado Features
 * Cloud-based OCR engine. Vidado does not keep any images or results after processing.
+* Vidado READ API supports **zone** and not **pages** - each image must be smaller than 100,000 pixels, which is 1.1 inch² or 7.1 cm² at 300 dpi.
 * Deep Neural Network trained on 1,000,000,000 field samples in *English*.
 * Vidado claims over 90% field level accuracy or better than a human.
   * You can expect excellent results on Latin languages without accents - eg Spanish, Dutch, Italian, Swahili, Indonesian.
 * works on black&white, greyscale and color images.
-* images must be smaller than 100,000 pixels, which is 1.1 inch² or 7.1 cm² at 300 dpi.
 * The trial license is limited to 1 call per second.
 
 ## Configuration steps
