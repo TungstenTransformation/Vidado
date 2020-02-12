@@ -12,7 +12,7 @@ This guide will show you how to integrate Vidado Read API into the Advanzed Zone
 * Kofax RTTS
 * Kofax Transformation Toolkit
 
-## Vidado Features
+## Vidado Read API Features
 * Cloud-based OCR engine. Vidado does not keep any images or results after processing.
 * Vidado READ API supports **zones** and not **pages** - each image must be smaller than 100,000 pixels, which is 1.1 inch² or 7.1 cm² at 300 dpi.
 * The engine is a Deep Neural Network trained on 1,000,000,000 field samples in *English*.
