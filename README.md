@@ -4,7 +4,7 @@
 Vidado Read API, https://api.vidado.ai/portal/, is an extremely powerful OCR engine. Vidado confidently claims that it reads better than a human.
 This guide will show you how to integrate Vidado Read API into the Advanzed Zone Locator in Kofax Transformation.  
 
-## compatible with all versions of
+## Compatible with all versions of
 * Kofax Total Agility
 * Kofax Transformation Modules in Kofax Capture
 * Kofax RPA (since 10.3)
