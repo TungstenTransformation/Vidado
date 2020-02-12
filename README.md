@@ -25,7 +25,7 @@ This guide will show you how to integrate Vidado Read API into the Advanzed Zone
 1. Register for an API key at [https://api.vidado.ai/portal/]. This will give you a trial key for two weeks allowing for 1000 images/day and 1 image/second.
 1. Create or Open a Kofax Transformation Project in Project Builder or Transformation Designer.
 1. Add the [script](https://github.com/KofaxRPA/Vidado/blob/master/Vidado.vb) to the class where your Advanced Zone Locator is.  
-*Note that the script is looking for locators called "AZL"*
+*Note you can have mulitple Advanced Zone Locators in your class. The script will run on them all.
 1. Add your Vidado API Key to the Project's Script Variables, with a script variable named **VidadoAPIKey**
 ![image](https://user-images.githubusercontent.com/47416964/74356916-695cc080-4dbf-11ea-8aa6-f6107b48e121.png)
 1. Create a new Zone OMR profile called **Vidado** in **Project Settings/Recognotion/Zone Profile...**
