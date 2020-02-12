@@ -16,7 +16,6 @@ Private Sub Document_AfterLocate(ByVal pXDoc As CASCADELib.CscXDocument, ByVal L
    End If
 End Sub
 
-
 Sub AZL_Vidado(ByVal pXDoc As CASCADELib.CscXDocument,ByVal LocatorName As String,VidadoAPIKey As String)
    'This runs at the End of the Advanced Zone Locator. If any zone uses a profile with the name "Vidado" the image will be sent to Vidado
    'This uses the Zones after AZL has registered them.
@@ -70,8 +69,6 @@ Dim Timestamp As Long
 Private Function Vidado_API(ImageFileName As String, VidadoAPIKey As String, ByRef Confidence As Double) As String
    Dim Filename As String, XMLHTTP As New MSXML2.XMLHTTP60, JSON() As String
    Dim Boundary As String, Body As String, Bytes() As Byte, Now As Long
-
-
    Open ImageFileName For Binary Access Read As #1
    ReDim Bytes(0 To LOF(1) - 1)
    Get #1 ,, Bytes ' read the PNG file into a byte array
