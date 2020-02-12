@@ -11,12 +11,10 @@ Private Declare Function GetTickCount Lib "kernel32" () As Long ' milliseconds
 
 Private Sub Document_AfterLocate(ByVal pXDoc As CASCADELib.CscXDocument, ByVal LocatorName As String)
    If pXDoc.ExtractionClass="" Then Err.Raise(456,,"The XDocument needs to be classified before trying to extract.")
-   If Locator_GetType(pXDoc,LocatorName)="AdvZone" Then AZL_Vidado(pXDoc,LocatorName,Project.ScriptVariables.ItemByName("VidadoAPIKey").Value)
+   If Project.ClassByName(pXDoc.ExtractionClass).Locators.ItemByName(LocatorName).LocatorMethod.Name="AdvZone" Then ' if this is an Advanced Zone Locator
+      AZL_Vidado(pXDoc,LocatorName,Project.ScriptVariables.ItemByName("VidadoAPIKey").Value)
+   End If
 End Sub
-
-Private Function Locator_GetType(ByVal pXDoc As CASCADELib.CscXDocument, ByVal LocatorName As String)
-   Return Project.ClassByName(pXDoc.ExtractionClass).Locators.ItemByName(LocatorName).LocatorMethod.Name
-End Function
 
 
 Sub AZL_Vidado(ByVal pXDoc As CASCADELib.CscXDocument,ByVal LocatorName As String,VidadoAPIKey As String)
@@ -40,6 +38,7 @@ Sub AZL_Vidado(ByVal pXDoc As CASCADELib.CscXDocument,ByVal LocatorName As Strin
                      Image.CopyRect(Page,.Left,.Top,0,0,.Width,.Height)
                      ImageFileName= Environ("temp") & "\" & GUID_Create() & ".png" 'we need a unique file name for parallelization in KT server
                      Image.Save(ImageFileName,CscImgFileFormatPNG)
+                     If .Width*.Height>100000 Then Image_Shrink(ImageFileName,.Width,.Height)
                      .Text=Vidado_API(ImageFileName,VidadoAPIKey,Confidence)
                      .Confidence=Confidence
                      Kill ImageFileName ' delete the temp image after Vidado has finished
@@ -52,10 +51,27 @@ Sub AZL_Vidado(ByVal pXDoc As CASCADELib.CscXDocument,ByVal LocatorName As Strin
    Next
 End Sub
 
+Private Sub Image_Shrink(ImageFileName As String, Width As Long, Height As Long)
+   Dim WIA As Object 'WIA.ImageFile
+   Dim IP As Object 'ImageProcess
+   Dim Scale As Double 'This will shrink an image file to just less then 100,000 pixels.
+   Scale=100000/Width/Height*0.9
+   Set WIA = CreateObject("WIA.ImageFile")
+   Set IP = CreateObject("WIA.ImageProcess")
+   IP.Filters.Add IP.FilterInfos("Scale").FilterID
+   IP.Filters(1).Properties("MaximumWidth") = Width*Scale
+   IP.Filters(1).Properties("MaximumHeight") = Height*Scale
+   WIA.LoadFile(ImageFileName)
+   Set WIA = IP.Apply(WIA)
+   WIA.SaveFile(ImageFileName)
+End Sub
+
 Dim Timestamp As Long
 Private Function Vidado_API(ImageFileName As String, VidadoAPIKey As String, ByRef Confidence As Double) As String
    Dim Filename As String, XMLHTTP As New MSXML2.XMLHTTP60, JSON() As String
    Dim Boundary As String, Body As String, Bytes() As Byte, Now As Long
+
+
    Open ImageFileName For Binary Access Read As #1
    ReDim Bytes(0 To LOF(1) - 1)
    Get #1 ,, Bytes ' read the PNG file into a byte array
@@ -66,7 +82,6 @@ Private Function Vidado_API(ImageFileName As String, VidadoAPIKey As String, ByR
       Now=GetTickCount()
    Loop
    TimeStamp=GetTickCount()
-   Boundary = String(6, "-") & Replace(Mid(CreateObject("Scriptlet.TypeLib").GUID, 2, 36), "-", "")
    Boundary = "------------------------b944533fb31e85b5"   'HTTP multipart boundary https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type
    Body = Body & "--" & Boundary & vbCrLf
    Body = Body & "Content-Disposition: form-data; name=""image""; filename=""001.png""" & vbCrLf
