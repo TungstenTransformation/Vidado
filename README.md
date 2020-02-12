@@ -19,6 +19,7 @@ This guide will show you how to integrate Vidado Read API into the Advanzed Zone
 * Vidado claims over 90% field level accuracy or better than a human.
   * You can expect excellent results on Latin languages without accents - eg Spanish, Dutch, Italian, Swahili, Indonesian.
 * It works on black&white, greyscale and color images.
+* no image cleanup at all is required - smudges, lines, boxes, shadings are all ignored.
 * The trial license is limited to 1 call per second.
 
 ## Configuration steps
