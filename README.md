@@ -36,6 +36,7 @@ This guide will show you how to integrate Vidado Read API into the Advanzed Zone
 *Tip! Set your Vidado Profile to be the default profile, and it will be autoselected for new OMR Zones.*
 ![image](https://user-images.githubusercontent.com/47416964/74358438-b6da2d00-4dc1-11ea-9890-81b4dd8f3576.png)
 1. Inside your Advanced Zone Locator, select the Vidado Profile for each zone you want to send to Vidado
+1. **IMPORTANT** Make sure you classify your documents BEFORE testing the Advanced Zone Locator.
 1. Press "Test" on your Advanced Zone Locator to see Vidado's magic. **You cannot test Vidado inside the Zone settings, but you can inside the locator**
 ![image](https://user-images.githubusercontent.com/47416964/74366173-c8c2cc80-4dcf-11ea-8f76-fd73810e1b00.png)
 
