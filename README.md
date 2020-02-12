@@ -14,7 +14,7 @@ This guide will show you how to integrate Vidado Read API into the Advanzed Zone
 
 ## Vidado Read API Features
 * Cloud-based OCR engine. Vidado does not keep any images or results after processing.
-* Vidado READ API supports **zones** and not **pages** - each image must be smaller than 100,000 pixels, which is 1.1 inch² or 7.1 cm² at 300 dpi.
+* Vidado READ API supports **zones** and not **pages** - each image must be smaller than 100,000 pixels, which is 1.1 inch² or 7.1 cm² at 300 dpi. The script will shrink images that are larger than 100,000 pixels.
 * The engine is a Deep Neural Network trained on 1,000,000,000 field samples in *English*.
 * Vidado claims over 90% field level accuracy or better than a human.
   * You can expect excellent results on Latin languages without accents - eg Spanish, Dutch, Italian, Swahili, Indonesian.
