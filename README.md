@@ -1,4 +1,4 @@
-# Integration of Vidado Read into Kofax Transformation
+# Integration of Vidado Read API into Kofax Transformation
 <img src="https://vidado.ai/wp-content/themes/vidado/images/Vidado-logo-blue.png" alt="Vidado Logo" height="45">
 <img src="https://www.kofax.com/-/media/Images/Global/Header/logo_header.svg" alt="Kofax Logo" height="45">
 Vidado Read API, (https://api.vidado.ai/portal/), is an extremely powerful OCR engine. Vidado confidently claims that it reads better than a human.
