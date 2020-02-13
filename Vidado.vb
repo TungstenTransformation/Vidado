@@ -33,7 +33,7 @@ Sub AZL_Vidado(ByVal pXDoc As CASCADELib.CscXDocument,ByVal LocatorName As Strin
                   With Alts(0).SubFields(S)
                      Set Page=pXDoc.CDoc.Pages(.PageIndex).GetImage
                      Set Image=New CscImage
-                     Image.CreateImage(CscImgColFormatBinary,.Width,.Height,Page.XResolution,Page.YResolution)
+                     Image.CreateImage(Image_GetColorFormat(Page),.Width,.Height,Page.XResolution,Page.YResolution)
                      Image.CopyRect(Page,.Left,.Top,0,0,.Width,.Height)
                      ImageFileName= Environ("temp") & "\" & GUID_Create() & ".png" 'we need a unique file name for parallelization in KT server
                      Image.Save(ImageFileName,CscImgFileFormatPNG)
@@ -50,6 +50,21 @@ Sub AZL_Vidado(ByVal pXDoc As CASCADELib.CscXDocument,ByVal LocatorName As Strin
    Next
 End Sub
 
+Private Function Image_GetColorFormat(Image As CscImage) As CscImageColorFormat
+      Select Case Image.BitsPerSample
+         Case 1
+            Return CscImgColFormatBinary
+         Case 4
+            Return CscImgColFormatGray4
+         Case 8
+            Return CscImgColFormatGray8
+         Case 16
+            Return CscImgColFormatGray16
+         Case 24
+            Return CscImgColFormatRGB24
+      End Select
+End Function
+
 Private Sub Image_Shrink(ImageFileName As String, Width As Long, Height As Long)
    Dim WIA As Object 'WIA.ImageFile
    Dim IP As Object 'ImageProcess
@@ -62,6 +77,7 @@ Private Sub Image_Shrink(ImageFileName As String, Width As Long, Height As Long)
    IP.Filters(1).Properties("MaximumHeight") = Height*Scale
    WIA.LoadFile(ImageFileName)
    Set WIA = IP.Apply(WIA)
+   Kill(ImageFileName)
    WIA.SaveFile(ImageFileName)
 End Sub
 
