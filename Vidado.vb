@@ -90,7 +90,7 @@ Private Function Vidado_API(ImageFileName As String, VidadoAPIKey As String, ByR
    Get #1 ,, Bytes ' read the PNG file into a byte array
    Close #1
    Now=GetTickCount()
-   Do While Now-Timestamp <1400 ' the trial license only allows 1 call per second, so we wait 1400 ms
+   Do While Now-Timestamp <1500 ' the trial license only allows 1 call per second, so we wait 1500 ms
       DoEvents
       Now=GetTickCount()
    Loop
