@@ -25,7 +25,7 @@ This guide will show you how to integrate Vidado Read API into the Advanzed Zone
 * Vidado supports jpeg, jpg, gif, png. *The script uses png because it supports B&W, grey and color losslessly*
 * Only horizontal text can be read, not vertical. There is no deskew, but the engine was trained on samples with ±5° skew.
 * no image cleanup at all is required - smudges, lines, boxes, shadings are all ignored.
-* You cannot train Vidado, but as a Clound System it is constantly being improved.
+* You cannot train Vidado, but as a clound solution, it is constantly being improved.
 * The trial license is limited to 1 call per second.
 
 ## Configuration steps
