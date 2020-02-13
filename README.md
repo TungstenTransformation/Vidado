@@ -14,12 +14,16 @@ This guide will show you how to integrate Vidado Read API into the Advanzed Zone
 
 ## Vidado Read API Features
 * Cloud-based OCR engine. Vidado does not keep any images or results after processing.
-* Vidado READ API supports **zones** and not **pages** - each image must be smaller than 100,000 pixels, which is 1.1 inch² or 7.1 cm² at 300 dpi. The script will shrink images that are larger than 100,000 pixels.
-* The engine is a Deep Neural Network trained on 1,000,000,000 field samples in *English*.
+* Vidado READ API supports **zones** and not **pages** - each image must be smaller than 100,000 pixels, which is 1.1 inch² or 7.1 cm² at 300 dpi. *The script will dynamically shrink images that are larger than 100,000 pixels.*
+* The engine is a Deep Neural Network trained on 1,000,000,000 hand-checked field samples in *English*.
 * Vidado claims over 90% field level accuracy or better than a human.
+  * Vidado only returns results in lower case. It does not return accents.
   * You can expect excellent results on Latin languages without accents - eg Spanish, Dutch, Italian, Swahili, Indonesian.
 * It works on black&white, greyscale and color images.
+* Only horizontal text, nor can vertical text be read.
+* There is no deskew, but the engine was trained on samples with ±5° skew.
 * no image cleanup at all is required - smudges, lines, boxes, shadings are all ignored.
+* You cannot train Vidado, but as a Clound System it is constantly being improved.
 * The trial license is limited to 1 call per second.
 
 ## Configuration steps
@@ -39,4 +43,14 @@ This guide will show you how to integrate Vidado Read API into the Advanzed Zone
 1. **IMPORTANT** Make sure you classify your documents BEFORE testing the Advanced Zone Locator.
 1. Press "Test" on your Advanced Zone Locator to see Vidado's magic. **You cannot test Vidado inside the Zone settings, but you can inside the locator** *You do not need any image cleanup profiles*
 ![image](https://user-images.githubusercontent.com/47416964/74366173-c8c2cc80-4dcf-11ea-8f76-fd73810e1b00.png)
+
+## Vidado License Tiers
+Tier|Cost/month|Quota/day|Calls/second
+----|----------|---------|-----------
+Developer|Free|1,000|1
+Basic|$499|35,000|3
+Scale|$999|75,000|6
+Enterprise|varies|custom|20
+
+
 
