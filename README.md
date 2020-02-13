@@ -20,7 +20,7 @@ This guide will show you how to integrate Vidado Read API into the Advanzed Zone
   * Vidado only returns results in lower case. It does not return accents.
   * You can expect excellent results on Latin languages without accents - eg Spanish, Dutch, Italian, Swahili, Indonesian.
 * It works on black&white, greyscale and color images.
-* Vidado supports jpeg, jpg, gif, png. *the script uses png because it supports B&W, grey and color losslessly*
+* Vidado supports jpeg, jpg, gif, png. *The script uses png because it supports B&W, grey and color losslessly*
 * Only horizontal text, nor can vertical text be read.
 * There is no deskew, but the engine was trained on samples with ±5° skew.
 * no image cleanup at all is required - smudges, lines, boxes, shadings are all ignored.
