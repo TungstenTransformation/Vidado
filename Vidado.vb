@@ -69,7 +69,7 @@ Private Sub Image_Shrink(ImageFileName As String, Width As Long, Height As Long)
    Dim WIA As Object 'WIA.ImageFile
    Dim IP As Object 'ImageProcess
    Dim Scale As Double 'This will shrink an image file to just less then 100,000 pixels.
-   Scale=100000/Width/Height*0.9
+   Scale=100000/Width/Height*0.98
    Set WIA = CreateObject("WIA.ImageFile")
    Set IP = CreateObject("WIA.ImageProcess")
    IP.Filters.Add IP.FilterInfos("Scale").FilterID
