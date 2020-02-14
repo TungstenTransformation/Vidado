@@ -117,7 +117,7 @@ Private Function Vidado_API(ImageFileName As String, VidadoAPIKey As String, ByR
             Return JSON(3) ' the OCR text
          End If
       ElseIf .status=405 Then
-         Return "Error 404 page not found"
+         Return "Error 405 page not found"
       Else 'Vidado returned an error
          Return ("Error " + CStr(.status) & " : " & Split(.responseText,"""")(3) )
       End If
