@@ -17,7 +17,7 @@ Public Sub Document_AfterLocate(ByVal pXDoc As CASCADELib.CscXDocument, ByVal Lo
    End If
 End Sub
 
-Sub AZL_Vidado(ByVal pXDoc As CASCADELib.CscXDocument,ByVal LocatorName As String,VidadoAPIKey As String)
+Public Sub AZL_Vidado(ByVal pXDoc As CASCADELib.CscXDocument,ByVal LocatorName As String,VidadoAPIKey As String)
    'This runs at the End of the Advanced Zone Locator. If any zone uses a profile with the name "Vidado" the image will be sent to Vidado
    'This uses the Zones after AZL has registered them.
    Dim AZL As CscAdvZoneLocator, Zones As CscAdvZoneLocZones, Zone As CscAdvZoneLocZone, Z As Long, Alts As CscXDocFieldAlternatives, S As Long
