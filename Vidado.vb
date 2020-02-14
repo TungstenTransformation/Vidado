@@ -10,7 +10,7 @@ Option Explicit
 
 Private Declare Function GetTickCount Lib "kernel32" () As Long ' milliseconds
 
-Private Sub Document_AfterLocate(ByVal pXDoc As CASCADELib.CscXDocument, ByVal LocatorName As String)
+Public Sub Document_AfterLocate(ByVal pXDoc As CASCADELib.CscXDocument, ByVal LocatorName As String)
    If pXDoc.ExtractionClass="" Then Err.Raise(456,,"The XDocument needs to be classified before trying to extract.")
    If Project.ClassByName(pXDoc.ExtractionClass).Locators.ItemByName(LocatorName).LocatorMethod.Name="AdvZone" Then ' if this is an Advanced Zone Locator
       AZL_Vidado(pXDoc,LocatorName,Project.ScriptVariables.ItemByName("VidadoAPIKey").Value)
