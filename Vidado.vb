@@ -2,6 +2,7 @@
 Option Explicit
 'See https://github.com/KofaxRPA/Vidado for source code
 'In the Menu "Edit/References..." Add a reference to "Microsoft XML, 6.0"
+'In the Menu "Edit/References..." Add a reference to "Kofax Cascade Advanced Zone Locator"
 'This script calls Vidado Read engine, https://api.vidado.ai/portal/ for images less than 100,000 pixels.
 'Configure your Advanced Zone Locators as normal with registration, zones and anchors.
 'Give each field you want to send to Vidado an OMR profile with the name "Vidado". The script will replace the OMR result with Vidado's OCR
