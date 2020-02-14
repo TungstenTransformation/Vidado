@@ -83,17 +83,12 @@ End Sub
 
 Dim Timestamp As Long
 Private Function Vidado_API(ImageFileName As String, VidadoAPIKey As String, ByRef Confidence As Double) As String
-   Dim Filename As String, XMLHTTP As New MSXML2.XMLHTTP60, JSON() As String
+   Dim Filename As String, JSON() As String
    Dim Boundary As String, Body As String, Bytes() As Byte, Now As Long
    Open ImageFileName For Binary Access Read As #1
    ReDim Bytes(0 To LOF(1) - 1)
    Get #1 ,, Bytes ' read the PNG file into a byte array
    Close #1
-   Now=GetTickCount()
-   Do While Now-Timestamp <1500 ' the trial license only allows 1 call per second, so we wait 1500 ms
-      DoEvents
-      Now=GetTickCount()
-   Loop
    TimeStamp=GetTickCount()
    Boundary = "------------------------b944533fb31e85b5"   'HTTP multipart boundary https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type
    Body = Body & "--" & Boundary & vbCrLf
@@ -101,27 +96,36 @@ Private Function Vidado_API(ImageFileName As String, VidadoAPIKey As String, ByR
    Body = Body & "Content-Type: image/png" & vbCrLf & vbCrLf
    Body = Body & StrConv(Bytes,vbFromANSIBytes)
    Body = Body & vbCrLf & "--" & Boundary & "--" & vbCrLf
-   With XMLHTTP
-      .Open("POST","https://api.vidado.ai/read/text",varAsync:=False)
-      .setRequestHeader("accept", "application/json")
-      .setRequestHeader("Authorization", VidadoAPIKey)
-      .setRequestHeader("Content-Length", UBound(Bytes))   'LenB is wrong, it must be Len
-      .setRequestHeader("Content-Type", "multipart/form-data; boundary=" & Boundary)
-      Bytes=StrConv(Body,vbANSIBytes)
-      .send(Bytes)  'Send the image to Vidado
-      Confidence=0.0
-      If .status=200 Then  ' Vidado returned success
-         JSON=Split(.responseText,"""") ' very cheap JSON parser! split the JSON results from Vidado into an array, using " as delimiter
-         If UBound(JSON)=14 Then ' a successful Vidado result without errors has 14 elements
-            Confidence=CDbl(Mid(JSON(6),2,Len(JSON(6))-2))  ' super cheap JSON parser to get the OCR confidence
-            Return JSON(3) ' the OCR text
+   Do
+      With New MSXML2.XMLHTTP60
+         .Open("POST","https://api.vidado.ai/read/text",varAsync:=False)
+         .setRequestHeader("accept", "application/json")
+         .setRequestHeader("Authorization", VidadoAPIKey)
+         .setRequestHeader("Content-Length", UBound(Bytes))   'LenB is wrong, it must be Len
+         .setRequestHeader("Content-Type", "multipart/form-data; boundary=" & Boundary)
+         Bytes=StrConv(Body,vbANSIBytes)
+         Now=GetTickCount()
+         Do While Now-Timestamp <100 ' the trial license only allows 1 call per second, so we wait 1500 ms
+            DoEvents
+            Now=GetTickCount()
+         Loop
+         .send(Bytes)  'Send the image to Vidado
+         Confidence=0.0
+         If .status=200 Then  ' Vidado returned success
+            JSON=Split(.responseText,"""") ' very cheap JSON parser! split the JSON results from Vidado into an array, using " as delimiter
+            If UBound(JSON)=14 Then ' a successful Vidado result without errors has 14 elements
+               Confidence=CDbl(Mid(JSON(6),2,Len(JSON(6))-2))  ' super cheap JSON parser to get the OCR confidence
+               Return JSON(3) ' the OCR text
+            End If
+         ElseIf .status=405 Then
+            Return "Error 404 page not found"
+         ElseIf .status <> 429 Then 'Vidado returned an error
+            Return ("Error " + CStr(.status) & " : " & Split(.responseText,"""")(3) )
          End If
-      ElseIf .status=405 Then
-         Return "Error 405 page not found"
-      Else 'Vidado returned an error
-         Return ("Error " + CStr(.status) & " : " & Split(.responseText,"""")(3) )
-      End If
-   End With
+         'we get here only on a 429 error "Rate limit exceeded" when we were too quick!
+         Confidence=0
+      End With
+   Loop
 End Function
 
 Function GUID_Create() As String
