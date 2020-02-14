@@ -35,7 +35,15 @@ Public Sub AZL_Vidado(ByVal pXDoc As CASCADELib.CscXDocument,ByVal LocatorName A
                      Set Page=pXDoc.CDoc.Pages(.PageIndex).GetImage
                      Set Image=New CscImage
                      Image.CreateImage(Image_GetColorFormat(Page),.Width,.Height,Page.XResolution,Page.YResolution)
-                     Image.CopyRect(Page,.Left,.Top,0,0,.Width,.Height)
+                     On Error GoTo cannotcopy
+                        Image.CopyRect(Page,.Left,.Top,0,0,.Width,.Height) 'this might fail due to incompatible color formats
+                        GoTo continue
+                     cannotcopy:
+                        On Error GoTo 0 'disable error handling
+                        Set Page=Page.BinarizeWithVRS()  'perform VRS to make copying work
+                        Image.CreateImage(Image_GetColorFormat(Page),.Width,.Height,Page.XResolution,Page.YResolution)
+                        Image.CopyRectSafe(Page,.Left,.Top,0,0,.Width,.Height,False)
+                     continue:
                      ImageFileName= Environ("temp") & "\" & GUID_Create() & ".png" 'we need a unique file name for parallelization in KT server
                      Image.Save(ImageFileName,CscImgFileFormatPNG)
                      If .Width*.Height>100000 Then Image_Shrink(ImageFileName,.Width,.Height)
@@ -56,14 +64,14 @@ Private Function Image_GetColorFormat(Image As CscImage) As CscImageColorFormat
          Case 1
             Return CscImgColFormatBinary
          Case 4
-            Return CscImgColFormatGray4
+            If Image.IsGray Then Return CscImgColFormatGray4
          Case 8
-            Return CscImgColFormatGray8
+            If Image.IsGray Then Return CscImgColFormatGray8
+            If Image.IsColor Then Return CscImgColFormatRGB24
          Case 16
-            Return CscImgColFormatGray16
-         Case 24
-            Return CscImgColFormatRGB24
+            If Image.IsGray Then Return CscImgColFormatGray16
       End Select
+   Err.Raise(467,"image has unknown color format!")
 End Function
 
 Private Sub Image_Shrink(ImageFileName As String, Width As Long, Height As Long)
