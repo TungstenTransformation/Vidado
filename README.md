@@ -36,7 +36,7 @@ This guide will show you how to integrate Vidado Read API into the Advanzed Zone
 1. In the Script Editor on the Menu Edit/References.. add a Reference to **Microsoft XML, 6.0**
 1. Add your Vidado API Key to the Project's Script Variables, with a script variable named **VidadoAPIKey**
 ![image](https://user-images.githubusercontent.com/47416964/74356916-695cc080-4dbf-11ea-8aa6-f6107b48e121.png)
-1. Create a new Zone OMR profile called **Vidado** in **Project Settings/Recognotion/Zone Profile...**
+1. Create a new Zone OMR profile called **Vidado** in **Project Settings/Recognition/Zone Profile.../OMR**
 ![image](https://user-images.githubusercontent.com/47416964/74357087-a88b1180-4dbf-11ea-96a9-60c026313646.png)  
 *Tip! Set your Vidado Profile to be the default profile, and it will be autoselected for new OMR Zones.*
 ![image](https://user-images.githubusercontent.com/47416964/74358438-b6da2d00-4dc1-11ea-9890-81b4dd8f3576.png)
