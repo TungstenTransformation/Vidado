@@ -123,8 +123,8 @@ Private Function Vidado_API(ImageFileName As String, VidadoAPIKey As String, ByR
          If .status=200 Then  ' Vidado returned success
             JSON=Split(.responseText,"""") ' very cheap JSON parser! split the JSON results from Vidado into an array, using " as delimiter
             If UBound(JSON)=14 Then ' a successful Vidado result without errors has 14 elements
-               JSON(6)=replace(JSON(6),",",mid(format(0.1,"0.0"),2,1) 'handle , as decimal character                                     
-               JSON(6)=replace(JSON(6),".",mid(format(0.1,"0.0"),2,1) 'handle . as decimal character                                      
+               JSON(6)=replace(JSON(6),",",mid(format(0.1,"0.0"),2,1)) 'handle , as decimal character                                     
+               JSON(6)=replace(JSON(6),".",mid(format(0.1,"0.0"),2,1)) 'handle . as decimal character                                      
                Confidence=CDbl(Mid(JSON(6),2,Len(JSON(6))-2))  ' super cheap JSON parser to get the OCR confidence
                Return JSON(3) ' the OCR text
             End If
