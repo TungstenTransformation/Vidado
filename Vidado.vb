@@ -21,7 +21,7 @@ Public Sub AZL_Vidado(ByVal pXDoc As CASCADELib.CscXDocument,ByVal LocatorName A
    'This runs at the End of the Advanced Zone Locator. If any zone uses a profile with the name "Vidado" the image will be sent to Vidado
    'This uses the Zones after AZL has registered them.
    Dim AZL As CscAdvZoneLocator, Zones As CscAdvZoneLocZones, Zone As CscAdvZoneLocZone, Z As Long, Alts As CscXDocFieldAlternatives, S As Long
-   Dim Confidence As Double, Image As CscImage, Page As CscImage, SubField As CscAdvZoneLocSubfield, ImageFileName As String
+   Dim Confidence As Double, Image As CscImage, Page As CscImage, SubField As CscAdvZoneLocSubfield, ImageFileName As String, scale As Double
    Set AZL=Project.ClassByName(pXDoc.ExtractionClass).Locators.ItemByName(LocatorName).LocatorMethod
    Set Alts=pXDoc.Locators.ItemByName(LocatorName).Alternatives
    For Z=0 To AZL.Zones.Count-1
@@ -46,7 +46,11 @@ Public Sub AZL_Vidado(ByVal pXDoc As CASCADELib.CscXDocument,ByVal LocatorName A
                      continue:
                      ImageFileName= Environ("temp") & "\" & GUID_Create() & ".png" 'we need a unique file name for parallelization in KT server
                      Image.Save(ImageFileName,CscImgFileFormatPNG)
-                     If .Width*.Height>100000 Then Image_Shrink(ImageFileName,.Width,.Height)
+                     .StringTag=CStr(.Width) & " x " & CStr(.Height) & " = " & Format(.Width*.Height,"#,###") & " pixels" ' add pixel info to comments
+                     If .Width*.Height>100000 Then
+                        scale=Image_Shrink(ImageFileName,.Width,.Height)
+                        .StringTag = .StringTag & " (shrunk to " & Format(scale,"0.00%") & ")"
+                     End If
                      .Text=Vidado_API(ImageFileName,VidadoAPIKey,Confidence)
                      .Confidence=Confidence
                      Kill ImageFileName ' delete the temp image after Vidado has finished
@@ -74,7 +78,7 @@ Private Function Image_GetColorFormat(Image As CscImage) As CscImageColorFormat
    Err.Raise(467,"image has unknown color format!")
 End Function
 
-Private Sub Image_Shrink(ImageFileName As String, Width As Long, Height As Long)
+Private Function Image_Shrink(ImageFileName As String, Width As Long, Height As Long) As Double
    Dim WIA As Object 'WIA.ImageFile
    Dim IP As Object 'ImageProcess
    Dim Scale As Double 'This will shrink an image file to just less then 100,000 pixels.
@@ -88,7 +92,8 @@ Private Sub Image_Shrink(ImageFileName As String, Width As Long, Height As Long)
    Set WIA = IP.Apply(WIA)
    Kill(ImageFileName)
    WIA.SaveFile(ImageFileName)
-End Sub
+   Return Scale
+End Function
 
 Dim Timestamp As Long
 Private Function Vidado_API(ImageFileName As String, VidadoAPIKey As String, ByRef Confidence As Double) As String
@@ -123,8 +128,8 @@ Private Function Vidado_API(ImageFileName As String, VidadoAPIKey As String, ByR
          If .status=200 Then  ' Vidado returned success
             JSON=Split(.responseText,"""") ' very cheap JSON parser! split the JSON results from Vidado into an array, using " as delimiter
             If UBound(JSON)=14 Then ' a successful Vidado result without errors has 14 elements
-               JSON(6)=replace(JSON(6),",",mid(format(0.1,"0.0"),2,1)) 'handle , as decimal character                                     
-               JSON(6)=replace(JSON(6),".",mid(format(0.1,"0.0"),2,1)) 'handle . as decimal character                                      
+               JSON(6)=Replace(JSON(6),",",Mid(Format(0.1,"0.0"),2,1)) 'handle , as decimal character
+               JSON(6)=Replace(JSON(6),".",Mid(Format(0.1,"0.0"),2,1)) 'handle . as decimal character
                Confidence=CDbl(Mid(JSON(6),2,Len(JSON(6))-2))  ' super cheap JSON parser to get the OCR confidence
                Return JSON(3) ' the OCR text
             End If
